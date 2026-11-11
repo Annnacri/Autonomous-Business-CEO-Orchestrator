@@ -1,0 +1,6 @@
+{
+  "name": "Autonomous Business CEO Orchestrator",
+  "description": "Executive AI decision suite and multi-agent coordination platform evaluating business opportunities, monetization of existing assets vs new ventures, and 7-day revenue action plan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
