@@ -40,12 +40,12 @@ export const StressTestModal: React.FC<StressTestModalProps> = ({
     setCritique(null);
 
     try {
-      const res = await fetch('/api/gemini/stress-test', {
+      const res = await fetch('/api/agents', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          assumption,
-          targetPath,
+          task: `Faz um stress-test implacável à seguinte premissa de negócio (${targetPath}): "${assumption}". Identifica riscos reais, falhas operacionais e como validar com $0 de investimento.`,
+          context: 'breakfastinbedlx.com e ecossistema de agentes AI em Lisboa. Regra: $0 gasto não autorizado, foco em execução imediata.',
         }),
       });
 
@@ -55,7 +55,8 @@ export const StressTestModal: React.FC<StressTestModalProps> = ({
       }
 
       const data = await res.json();
-      setCritique(data.text);
+      const r = data.result;
+      setCritique(`🛡️ VEREDITO CEO:\n${r.ceoDecision}\n\n⚠️ RISCOS & OPERAÇÕES:\n${r.operationsAgent}\n\n✅ VALIDAÇÃO IMEDIATA:\n${(r.nextActions || []).map((a: string, i: number) => `${i + 1}. ${a}`).join('\n')}`);
     } catch (err: any) {
       console.error('Stress test failed:', err);
       setErrorMsg(err.message || 'Failed to execute stress test.');

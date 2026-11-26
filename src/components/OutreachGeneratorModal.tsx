@@ -38,13 +38,12 @@ export const OutreachGeneratorModal: React.FC<OutreachGeneratorModalProps> = ({
     setGeneratedPitch(null);
 
     try {
-      const res = await fetch('/api/gemini/generate-outreach', {
+      const res = await fetch('/api/agents', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          product,
-          targetPersona: persona,
-          channel,
+          task: `Escreve uma mensagem de outreach B2B pronta a enviar para "${persona}" através do canal "${channel}" promovendo "${product}".`,
+          context: 'breakfastinbedlx.com (pequenos-almoços artesanais e parcerias com Alojamento Local em Lisboa) e portfólio de soluções AI para turismo. Tom direto, focado em valor e conversão.',
         }),
       });
 
@@ -54,7 +53,8 @@ export const OutreachGeneratorModal: React.FC<OutreachGeneratorModalProps> = ({
       }
 
       const data = await res.json();
-      setGeneratedPitch(data.text);
+      const r = data.result;
+      setGeneratedPitch(`${r.commercialAgent}\n\n💡 Ângulo CEO:\n${r.ceoDecision}`);
     } catch (err: any) {
       console.error('Outreach generation failed:', err);
       setErrorMsg(err.message || 'Failed to generate outreach pitch.');
