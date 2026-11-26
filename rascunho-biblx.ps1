@@ -3,6 +3,35 @@ param(
   [string]$Task
 )
 
+function Format-AgentValue {
+  param($Val, [int]$Indent = 0)
+  $pad = "  " * $Indent
+  if ($null -eq $Val) { return "" }
+  if ($Val -is [string] -or $Val -is [ValueType]) {
+    return "$pad$Val"
+  }
+  if ($Val -is [System.Collections.IEnumerable]) {
+    $lines = foreach ($item in $Val) {
+      if ($item -is [string] -or $item -is [ValueType]) {
+        "$pad- $item"
+      } else {
+        Format-AgentValue -Val $item -Indent ($Indent + 1)
+      }
+    }
+    return ($lines -join "`r`n")
+  }
+  $props = $Val.PSObject.Properties
+  $out = foreach ($p in $props) {
+    $v = $p.Value
+    if ($v -is [string] -or $v -is [ValueType]) {
+      "$pad[$($p.Name)]: $v"
+    } else {
+      "$pad[$($p.Name)]:`r`n" + (Format-AgentValue -Val $v -Indent ($Indent + 1))
+    }
+  }
+  return ($out -join "`r`n")
+}
+
 $context = "breakfastinbedlx.com (pequenos-almocos artesanais em Lisboa). Zonas autorizadas apenas para ja: Penha de Franca, Graca, Sao Vicente, Santa Clara, Alfama, Santa Apolonia e Arroios (nao atuar fora destas zonas). Publico: Alojamentos Locais (AL) e qualquer turista hospedado nessas zonas. Regras: 0 euros de gasto nao autorizado; gerar apenas rascunhos/planos para revisao manual, sem enviar mensagens automaticamente."
 
 $payload = @{
@@ -40,7 +69,10 @@ $stamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
 $outFile = Join-Path $outDir "rascunho_$stamp.txt"
 
 $r = $data.result
-$acoes = ($r.nextActions | ForEach-Object { "- $_" }) -join "`r`n"
+$ceoText = Format-AgentValue -Val $r.ceoDecision
+$comText = Format-AgentValue -Val $r.commercialAgent
+$opsText = Format-AgentValue -Val $r.operationsAgent
+$acoes   = Format-AgentValue -Val $r.nextActions
 
 $texto = @"
 DATA: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
@@ -48,13 +80,13 @@ PEDIDO: $Task
 MODO: Rascunho local (sem envio automatico / 0 gasto nao autorizado)
 
 === CEO ===
-$($r.ceoDecision)
+$ceoText
 
 === COMERCIAL (ALs & Turistas) ===
-$($r.commercialAgent)
+$comText
 
 === OPERACOES (7 Zonas Lisboa) ===
-$($r.operationsAgent)
+$opsText
 
 === PROXIMOS PASSOS ===
 $acoes
@@ -62,4 +94,4 @@ $acoes
 
 [System.IO.File]::WriteAllText($outFile, $texto, $utf8NoBom)
 Write-Host "Rascunho guardado em: $outFile" -ForegroundColor Green
-[System.IO.File]::ReadAllText($outFile, $utf8NoBom)
+notepad $outFile
