@@ -44,8 +44,8 @@ export const StressTestModal: React.FC<StressTestModalProps> = ({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          task: `Faz um stress-test implacável à seguinte premissa de negócio (${targetPath}): "${assumption}". Identifica riscos reais, falhas operacionais e como validar com $0 de investimento.`,
-          context: 'breakfastinbedlx.com e ecossistema de agentes AI em Lisboa. Regra: $0 gasto não autorizado, foco em execução imediata.',
+          task: `Faz um stress-test implacÃ¡vel Ã  seguinte premissa de negÃ³cio (${targetPath}): "${assumption}". Identifica riscos reais, falhas operacionais e como validar com $0 de investimento.`,
+          context: 'breakfastinbedlx.com (pequenos-almoços artesanais em Lisboa). Zonas autorizadas apenas para já: Penha de França, Graça, São Vicente, Santa Clara, Alfama, Santa Apolónia e Arroios (não atuar fora destas zonas). Público: Alojamentos Locais (AL) e qualquer turista hospedado nessas zonas. Regras:  gasto não autorizado; gerar apenas planos e rascunhos para revisão manual, sem enviar emails, WhatsApp ou mensagens automaticamente.',
         }),
       });
 
@@ -56,7 +56,7 @@ export const StressTestModal: React.FC<StressTestModalProps> = ({
 
       const data = await res.json();
       const r = data.result;
-      setCritique(`🛡️ VEREDITO CEO:\n${r.ceoDecision}\n\n⚠️ RISCOS & OPERAÇÕES:\n${r.operationsAgent}\n\n✅ VALIDAÇÃO IMEDIATA:\n${(r.nextActions || []).map((a: string, i: number) => `${i + 1}. ${a}`).join('\n')}`);
+      setCritique(`ðŸ›¡ï¸ VEREDITO CEO:\n${r.ceoDecision}\n\nâš ï¸ RISCOS & OPERAÃ‡Ã•ES:\n${r.operationsAgent}\n\nâœ… VALIDAÃ‡ÃƒO IMEDIATA:\n${(r.nextActions || []).map((a: string, i: number) => `${i + 1}. ${a}`).join('\n')}`);
     } catch (err: any) {
       console.error('Stress test failed:', err);
       setErrorMsg(err.message || 'Failed to execute stress test.');
