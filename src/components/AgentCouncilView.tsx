@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
+import { MissionControlView } from './MissionControlView';
 import { Bot, Send, Sparkles, MessageSquare, ShieldCheck, ArrowRight, RefreshCw, AlertTriangle } from 'lucide-react';
 import { AGENT_REPORTS, COUNCIL_DEBATE } from '../data/agentCouncilData';
 import { AgentReport } from '../types/business';
@@ -54,11 +55,11 @@ export const AgentCouncilView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6">`r`n      <MissionControlView />
       {/* Header */}
       <div className="border-b border-slate-800 pb-5">
         <div className="text-xs font-semibold uppercase tracking-wider text-indigo-400">
-          Orchestration Hub · Multi-Agent Governance
+          Orchestration Hub Â· Multi-Agent Governance
         </div>
         <h2 className="text-xl lg:text-2xl font-bold text-white mt-1">
           Autonomous AI Agent Council & Interrogation Room
@@ -144,7 +145,7 @@ export const AgentCouncilView: React.FC = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
             <div>
               <h3 className="text-base font-bold text-white">
-                {currentAgent.name} · {currentAgent.role}
+                {currentAgent.name} Â· {currentAgent.role}
               </h3>
               <p className="text-xs text-slate-300 mt-1">
                 <strong>Core Thesis:</strong> {currentAgent.coreThesis}
@@ -203,7 +204,7 @@ export const AgentCouncilView: React.FC = () => {
               Executive Council Strategic Deliberation Transcript
             </h3>
             <span className="text-xs font-mono text-slate-400">
-              Recorded Session · AI Executive Council
+              Recorded Session Â· AI Executive Council
             </span>
           </div>
 
@@ -258,7 +259,7 @@ export const AgentCouncilView: React.FC = () => {
                 Interrogating: {currentAgent.name}
               </h3>
               <p className="text-xs text-slate-400 mt-0.5">
-                Role: {currentAgent.role} · Grounded in verified facts, estimates, and $0 capital policy.
+                Role: {currentAgent.role} Â· Grounded in verified facts, estimates, and $0 capital policy.
               </p>
             </div>
             <span className="text-xs font-mono text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">
@@ -322,7 +323,7 @@ export const AgentCouncilView: React.FC = () => {
 
             <div className="flex items-center justify-between">
               <span className="text-[11px] text-slate-500 font-mono">
-                Model: gemini-3.8-flash · Zero client-side API exposure
+                Model: gemini-3.8-flash Â· Zero client-side API exposure
               </span>
 
               <button
@@ -373,3 +374,4 @@ export const AgentCouncilView: React.FC = () => {
     </div>
   );
 };
+

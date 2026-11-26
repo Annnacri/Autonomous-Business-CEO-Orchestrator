@@ -1,0 +1,8 @@
+{
+  "name": "Agent 02 — Autonomous Market Intelligence",
+  "description": "Autonomous market research, customer demand intelligence, competitive benchmarking, and evidence-based commercial opportunity discovery.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

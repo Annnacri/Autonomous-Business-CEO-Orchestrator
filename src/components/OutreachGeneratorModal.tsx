@@ -11,8 +11,8 @@ interface OutreachGeneratorModalProps {
 export const OutreachGeneratorModal: React.FC<OutreachGeneratorModalProps> = ({
   isOpen,
   onClose,
-  initialProduct = 'AI Hotel Concierge',
-  initialPersona = 'Boutique Hotel General Manager (15-40 rooms)',
+  initialProduct = 'Breakfast in Bed LX',
+  initialPersona = 'International tourists and accommodation hosts in Lisbon',
 }) => {
   const [product, setProduct] = useState<string>(initialProduct);
   const [persona, setPersona] = useState<string>(initialPersona);
@@ -92,7 +92,7 @@ export const OutreachGeneratorModal: React.FC<OutreachGeneratorModalProps> = ({
         {/* Body */}
         <div className="p-5 overflow-y-auto space-y-4 text-xs">
           <p className="text-slate-300">
-            Generate high-converting, non-spammy outreach crafted by the Marketing Agent for Day 3 of the 7-day action plan. Features zero-risk 14-day free pilot offer.
+            Generate premium sales messages for Breakfast in Bed LX, targeting international tourists booking directly and Lisbon accommodation hosts and property managers. Preserve standard prices and the 10% host commission. No discounts or free pilots.
           </p>
 
           <form onSubmit={handleGenerate} className="space-y-3">
@@ -106,9 +106,9 @@ export const OutreachGeneratorModal: React.FC<OutreachGeneratorModalProps> = ({
                   onChange={(e) => setProduct(e.target.value)}
                   className="w-full bg-slate-950 text-slate-200 border border-slate-700 rounded-lg p-2 text-xs focus:outline-none focus:border-indigo-500"
                 >
-                  <option value="AI Hotel Concierge">AI Hotel Concierge</option>
-                  <option value="AI Tourguide Creator">AI Tourguide Creator</option>
-                  <option value="Subcontractor RFP Assistant">Subcontractor RFP Assistant</option>
+                  <option value="Breakfast in Bed LX">Breakfast in Bed LX</option>
+                  
+                  
                 </select>
               </div>
 
@@ -120,7 +120,7 @@ export const OutreachGeneratorModal: React.FC<OutreachGeneratorModalProps> = ({
                   type="text"
                   value={persona}
                   onChange={(e) => setPersona(e.target.value)}
-                  placeholder="e.g. Boutique Hotel GM (15-40 rooms)"
+                  placeholder="International tourists, Airbnb hosts and property managers in Lisbon"
                   className="w-full bg-slate-950 text-slate-200 border border-slate-700 rounded-lg p-2 text-xs focus:outline-none focus:border-indigo-500"
                 />
               </div>

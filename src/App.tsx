@@ -26,7 +26,7 @@ export default function App() {
   const [stressTestPath, setStressTestPath] = useState<string>('Path A');
 
   const [isOutreachModalOpen, setIsOutreachModalOpen] = useState<boolean>(false);
-  const [outreachProduct, setOutreachProduct] = useState<string>('AI Hotel Concierge');
+  const [outreachProduct, setOutreachProduct] = useState<string>('Breakfast in Bed LX');
   const [outreachPersona, setOutreachPersona] = useState<string>('Boutique Hotel General Manager (15-40 rooms)');
 
   // Handlers
@@ -36,7 +36,7 @@ export default function App() {
     setIsStressTestOpen(true);
   };
 
-  const handleOpenOutreach = (productName: string = 'AI Hotel Concierge', roleTitle: string = 'Boutique Hotel General Manager (15-40 rooms)') => {
+  const handleOpenOutreach = (productName: string = 'Breakfast in Bed LX', roleTitle: string = 'International tourists and accommodation hosts in Lisbon') => {
     setOutreachProduct(productName);
     setOutreachPersona(roleTitle);
     setIsOutreachModalOpen(true);

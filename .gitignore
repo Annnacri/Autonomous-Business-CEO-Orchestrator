@@ -6,3 +6,22 @@ coverage/
 *.log
 .env*
 !.env.example
+
+.env
+
+data/
+
+# Deployment exclusions
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+.vercel/
+**/*backup*
+**/*.backup*
+**/*.before-*
+AUTONOMOUS-MISSION-RESULT.json
+
+# Nested Git metadata
+**/.git_disabled/
