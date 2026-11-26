@@ -1,41 +1,37 @@
-﻿import type { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+
+const SYSTEM_PROMPT = `És o motor multi-agente agêntico do breakfastinbedlx.com (pequenos-almoços artesanais em Lisboa).
+Regras obrigatórias:
+1. Zonas autorizadas apenas para já: Penha de França, Graça, São Vicente, Santa Clara, Alfama, Santa Apolónia e Arroios. Nunca sugerir atuação fora destas 7 zonas.
+2. Público-alvo: Alojamentos Locais (AL) e turistas hospedados nessas zonas.
+3. Orçamento: 0 EUR de gasto não autorizado (foco orgânico, parcerias diretas e baixo custo).
+4. Segurança de envio: gerar planos, campanhas e rascunhos prontos para revisão/ação; nunca simular envio automático de emails, WhatsApp ou redes sociais sem credenciais reais configuradas.
+
+Responde SEMPRE em JSON válido com exatamente estas chaves:
+{
+  "ceoDecision": "decisão estratégica curta e direta",
+  "commercialAgent": "campanha concreta com mensagens prontas para ALs e turistas nas 7 zonas",
+  "operationsAgent": "plano operacional de execução, rotas matinais nas 7 zonas e controlo de qualidade",
+  "nextActions": ["ação 1", "ação 2", "ação 3", "ação 4"]
+}`;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Permitir pedidos vindos do breakfastinbedlx.com e do próprio painel
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método não permitido. Usa POST.' });
-  }
-
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    return res.status(500).json({ error: 'Falta configurar GEMINI_API_KEY nas variáveis de ambiente.' });
+    return res.status(405).json({ success: false, error: 'Method not allowed' });
   }
 
   try {
-    const { task, context = 'breakfastinbedlx.com - entregas de pequeno-almoço artesanal em Lisboa' } = req.body || {};
-
-    if (!task) {
-      return res.status(400).json({ error: 'Envia o campo "task" no corpo do pedido.' });
+    const { task, context } = req.body || {};
+    if (!task || typeof task !== 'string') {
+      return res.status(400).json({ success: false, error: 'Missing task' });
     }
 
-    const prompt = `És um conselho executivo multi-agente do negócio "${context}".
-Analisa o seguinte pedido/cenário e responde APENAS em JSON válido com este formato exato:
-{
-  "ceoDecision": "Decisão final objetiva e prioridade imediata",
-  "commercialAgent": "Estratégia de vendas, parcerias (ex: Alojamento Local) ou mensagem de outreach",
-  "operationsAgent": "Passos práticos de execução, logística e mitigação de risco",
-  "nextActions": ["Ação 1", "Ação 2", "Ação 3"]
-}
+    const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+    if (!apiKey) {
+      return res.status(500).json({ success: false, error: 'Missing GEMINI_API_KEY' });
+    }
 
-Pedido: ${task}`;
+    const userPrompt = `${SYSTEM_PROMPT}\n\nContexto: ${context || ''}\nTarefa agêntica: ${task}`;
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
@@ -43,23 +39,18 @@ Pedido: ${task}`;
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
+          contents: [{ parts: [{ text: userPrompt }] }],
           generationConfig: { responseMimeType: 'application/json' }
         })
       }
     );
 
-    if (!response.ok) {
-      const errText = await response.text();
-      return res.status(response.status).json({ error: 'Erro na API de LLM', details: errText });
-    }
+    const raw = await response.json();
+    const text = raw?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const parsed = JSON.parse(text);
 
-    const data = await response.json();
-    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-    const decision = JSON.parse(rawText);
-
-    return res.status(200).json({ success: true, result: decision });
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Falha no orquestrador de agentes', details: error?.message });
+    return res.status(200).json({ success: true, result: parsed });
+  } catch (err: any) {
+    return res.status(500).json({ success: false, error: err?.message || 'Agent execution error' });
   }
 }
