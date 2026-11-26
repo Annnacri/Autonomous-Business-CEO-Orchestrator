@@ -3,7 +3,7 @@ param(
   [string]$Task
 )
 
-$context = "breakfastinbedlx.com (pequenos-almoços artesanais em Lisboa). Zonas autorizadas apenas para já: Penha de França, Graça, São Vicente, Santa Clara, Alfama, Santa Apolónia e Arroios (não atuar fora destas zonas). Público: Alojamentos Locais (AL) e qualquer turista hospedado nessas zonas. Regras: $0 gasto não autorizado; gerar apenas rascunhos/planos para revisão manual, sem enviar mensagens automaticamente."
+$context = "breakfastinbedlx.com (pequenos-almocos artesanais em Lisboa). Zonas autorizadas apenas para ja: Penha de Franca, Graca, Sao Vicente, Santa Clara, Alfama, Santa Apolonia e Arroios (nao atuar fora destas zonas). Publico: Alojamentos Locais (AL) e qualquer turista hospedado nessas zonas. Regras: 0 euros de gasto nao autorizado; gerar apenas rascunhos/planos para revisao manual, sem enviar mensagens automaticamente."
 
 $payload = @{
   task    = $Task
@@ -19,7 +19,7 @@ Remove-Item $tmpJson -Force
 
 $jsonLine = ($rawOut | Where-Object { $_ -match '^\s*\{' } | Select-Object -Last 1)
 if (-not $jsonLine) {
-  Write-Host "Sem resposta JSON válida:" -ForegroundColor Red
+  Write-Host "Sem resposta JSON valida:" -ForegroundColor Red
   $rawOut
   exit 1
 }
@@ -45,7 +45,7 @@ $acoes = ($r.nextActions | ForEach-Object { "- $_" }) -join "`r`n"
 $texto = @"
 DATA: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
 PEDIDO: $Task
-MODO: Rascunho local (sem envio automatico / $0 gasto nao autorizado)
+MODO: Rascunho local (sem envio automatico / 0 gasto nao autorizado)
 
 === CEO ===
 $($r.ceoDecision)
@@ -62,4 +62,4 @@ $acoes
 
 [System.IO.File]::WriteAllText($outFile, $texto, $utf8NoBom)
 Write-Host "Rascunho guardado em: $outFile" -ForegroundColor Green
-Get-Content $outFile
+[System.IO.File]::ReadAllText($outFile, $utf8NoBom)
