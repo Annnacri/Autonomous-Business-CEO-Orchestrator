@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { MissionControlView } from './MissionControlView';
 import { Bot, Send, Sparkles, MessageSquare, ShieldCheck, ArrowRight, RefreshCw, AlertTriangle } from 'lucide-react';
 import { AGENT_REPORTS, COUNCIL_DEBATE } from '../data/agentCouncilData';
@@ -24,13 +24,12 @@ export const AgentCouncilView: React.FC = () => {
     setConsultResponse(null);
 
     try {
-      const res = await fetch('/api/gemini/agent-consult', {
+      const res = await fetch('/api/agents', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          agentId: selectedAgentId,
-          prompt: consultPrompt,
-          context: `Target Agent: ${currentAgent.name} (${currentAgent.role}). Focus: Evaluating Path A (AI Hotel Concierge, AI Tourguide, NexusAIStore) vs Path B (New B2B ventures). Capital spending rule: $0 unauthorized spend. Target: Revenue within 7 days.`,
+          task: `[Agente Foco: ${currentAgent.name} - ${currentAgent.role}] ${consultPrompt}`,
+          context: 'breakfastinbedlx.com (pequenos-almocos artesanais e parcerias B2B com Alojamento Local em Lisboa) e portfolio de agentes/apps AI de turismo (AI Hotel Concierge, AI Tourguide Creator). Regra: $0 gasto nao autorizado, foco em receita imediata.',
         }),
       });
 
@@ -40,7 +39,14 @@ export const AgentCouncilView: React.FC = () => {
       }
 
       const data = await res.json();
-      setConsultResponse(data.text);
+      const r = data.result;
+      const formatted = [
+        `👑 DECISÃO CEO:\n${r.ceoDecision}`,
+        `📈 AGENTE COMERCIAL:\n${r.commercialAgent}`,
+        `⚙️ AGENTE DE OPERAÇÕES:\n${r.operationsAgent}`,
+        `✅ PRÓXIMAS AÇÕES:\n${(r.nextActions || []).map((a: string, i: number) => `${i + 1}. ${a}`).join('\n')}`
+      ].join('\n\n');
+      setConsultResponse(formatted);
     } catch (err: any) {
       console.error('Consultation failed:', err);
       setErrorMsg(err.message || 'Failed to communicate with agent.');
