@@ -1,0 +1,37 @@
+﻿name: Breakfast in Bed LX - Campanha B2B
+
+on:
+  schedule:
+    - cron: '30 9 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  enviar-campanha:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Executar envios diarios
+        env:
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          LIMITE_ENVIOS: '10'
+          PAUSA_SEGUNDOS: '20'
+        run: python executar_ciclo.py
+
+      - name: Guardar estado atualizado no CSV e Log
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add contactos.csv envios_log.csv
+          git diff --staged --quiet || git commit -m "Atualizar estado da campanha B2B"
+          git push
