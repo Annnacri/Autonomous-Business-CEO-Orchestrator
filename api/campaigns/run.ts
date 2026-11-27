@@ -66,7 +66,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const dataPath = path.join(process.cwd(), 'data', 'als_7_zonas.json');
     const rawData = fs.readFileSync(dataPath, 'utf-8');
-    const allLeads: AlLead[] = JSON.parse(rawData);
+    const allLeads: AlLead[] = Array.isArray(body.leads) && body.leads.length > 0 ? body.leads : JSON.parse(rawData);
 
     const eligibleLeads = allLeads.filter((lead) => {
       if (!lead.ativo || !lead.email) return false;

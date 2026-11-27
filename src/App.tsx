@@ -12,6 +12,7 @@ import { FinalRecommendationView } from './components/FinalRecommendationView';
 import { ActionPlanView } from './components/ActionPlanView';
 import { AgentCouncilView } from './components/AgentCouncilView';
 import { RevenueTrackerView } from './components/RevenueTrackerView';
+import { CampaignRunnerView } from './components/CampaignRunnerView';
 import { ExportMemoModal } from './components/ExportMemoModal';
 import { StressTestModal } from './components/StressTestModal';
 import { OutreachGeneratorModal } from './components/OutreachGeneratorModal';
@@ -55,6 +56,7 @@ export default function App() {
     { id: 'final_recommendation', label: '9. Final Ruling' },
     { id: 'action_plan', label: '10. 7-Day Plan' },
     { id: 'agent_council', label: 'Agent Council' },
+    { id: 'al_campaigns', label: 'AL Campaigns (7 Zones)' },
   ];
 
   return (
@@ -149,6 +151,7 @@ export default function App() {
         )}
 
         {activeTab === 'agent_council' && <AgentCouncilView />}
+      {activeTab === 'al_campaigns' && <CampaignRunnerView />}
       </main>
 
       {/* Clean Footer */}
