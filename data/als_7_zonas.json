@@ -5,5 +5,47 @@
     "zona": "Graça",
     "email": "info@breakfastinbedlx.com",
     "ativo": true
+  },
+  {
+    "id": "al-002",
+    "nome": "AL Exemplo Penha de França",
+    "zona": "Penha de França",
+    "email": "info@breakfastinbedlx.com",
+    "ativo": false
+  },
+  {
+    "id": "al-003",
+    "nome": "AL Exemplo São Vicente",
+    "zona": "São Vicente",
+    "email": "info@breakfastinbedlx.com",
+    "ativo": false
+  },
+  {
+    "id": "al-004",
+    "nome": "AL Exemplo Santa Clara",
+    "zona": "Santa Clara",
+    "email": "info@breakfastinbedlx.com",
+    "ativo": false
+  },
+  {
+    "id": "al-005",
+    "nome": "AL Exemplo Alfama",
+    "zona": "Alfama",
+    "email": "info@breakfastinbedlx.com",
+    "ativo": false
+  },
+  {
+    "id": "al-006",
+    "nome": "AL Exemplo Santa Apolónia",
+    "zona": "Santa Apolónia",
+    "email": "info@breakfastinbedlx.com",
+    "ativo": false
+  },
+  {
+    "id": "al-007",
+    "nome": "AL Exemplo Arroios",
+    "zona": "Arroios",
+    "email": "info@breakfastinbedlx.com",
+    "ativo": false
   }
 ]
