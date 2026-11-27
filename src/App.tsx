@@ -18,7 +18,7 @@ import { StressTestModal } from './components/StressTestModal';
 import { OutreachGeneratorModal } from './components/OutreachGeneratorModal';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<string>('executive_summary');
+  const [activeTab, setActiveTab] = useState<string>('al_campaigns');
 
   // Modal states
   const [isExportModalOpen, setIsExportModalOpen] = useState<boolean>(false);

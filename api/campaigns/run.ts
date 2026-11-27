@@ -61,7 +61,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const body = typeof req.body === 'object' && req.body !== null ? req.body : {};
-    const dryRun = body.dryRun !== false;
+    const isCron = req.headers['x-vercel-cron'] === '1'; const dryRun = isCron ? false : body.dryRun !== false;
     const targetZone = typeof body.zone === 'string' ? body.zone.trim() : '';
 
     const dataPath = path.join(process.cwd(), 'data', 'als_7_zonas.json');
