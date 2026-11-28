@@ -1,49 +1,75 @@
-﻿import datetime
-import random
+﻿from datetime import datetime
+from pathlib import Path
 
-TEMAS = [
+now = datetime.utcnow()
+ciclo = (now.timetuple().tm_yday * 2) + (1 if now.hour >= 12 else 0)
+
+angulos = [
     {
-        "dia": "Segunda-feira",
-        "titulo": "Pequeno-almoço na cama em Lisboa",
-        "pt": "Acordar em Lisboa sem pressas e receber um pequeno-almoço artesanal à porta do alojamento. Croissants frescos, sumo natural, fruta da época e café quente — tudo entregue à hora marcada. Peça já em breakfastinbedlx.com 🥐☕",
-        "en": "Wake up slowly in Lisbon with an artisanal breakfast delivered straight to your door. Fresh croissants, natural juice, seasonal fruit, and hot coffee — right on time. Order at breakfastinbedlx.com 🥐☕",
-        "hashtags": "#BreakfastInBedLX #LisbonBreakfast #VisitLisbon #Alfama #GracaLisboa #ArtisanalBreakfast",
+        "tema": "Manhãs tranquilas em Lisboa (Hóspedes)",
+        "pt": (
+            "Acordar em Lisboa sem pressas e receber o pequeno-almoço diretamente onde estás faz toda a diferença no ritmo do dia. "
+            "No Breakfast in Bed LX, preparas tudo em minutos em breakfastinbedlx.com para começar a manhã com calma antes de sair."
+        ),
+        "en": (
+            "Waking up in Lisbon without rushing and having breakfast delivered straight to where you are changes the whole pace of your morning. "
+            "With Breakfast in Bed LX, order in minutes at breakfastinbedlx.com and start the day unhurried before exploring."
+        ),
+        "tags": "#BreakfastInBedLX #Lisboa #PequenoAlmocoLisboa #LisbonBreakfast #VisitLisbon #SlowMorning",
     },
     {
-        "dia": "Quarta-feira",
-        "titulo": "Parceria com Alojamentos Locais (QR Code gratuito)",
-        "pt": "Tem um Alojamento Local em Alfama, Graça, Castelo ou Mouraria? Oferecemos cartões QR Code gratuitos para os seus quartos. Os hóspedes pedem diretamente pelo telemóvel e nós tratamos da entrega matinal sem trabalho extra para si. Saiba mais em breakfastinbedlx.com 🏡✨",
-        "en": "Host a boutique apartment in historic Lisbon? We provide free custom QR Code cards for your rooms. Your guests order breakfast directly on their phone, and we handle morning delivery with zero hassle for you. Learn more at breakfastinbedlx.com 🏡✨",
-        "hashtags": "#AlojamentoLocal #Lisboa #LisbonHosts #HospitalityPortugal #BreakfastInBedLX",
+        "tema": "Parceria QR Code para Alojamentos Locais (B2B)",
+        "pt": (
+            "Tens um Alojamento Local ou guesthouse em Lisboa e queres elevar a experiência dos hóspedes sem complicações na operação? "
+            "O Breakfast in Bed LX disponibiliza cartões com QR Code para o quarto, ligando os teus hóspedes a breakfastinbedlx.com de forma simples."
+        ),
+        "en": (
+            "Running an Alojamento Local or guesthouse in Lisbon and want to elevate guest mornings without adding operational friction? "
+            "Breakfast in Bed LX offers room QR code cards connecting your guests to breakfastinbedlx.com effortlessly."
+        ),
+        "tags": "#AlojamentoLocal #LisboaAL #HospitalityLisbon #BreakfastInBedLX #GuestExperience #LisbonHosts",
     },
     {
-        "dia": "Sexta-feira",
-        "titulo": "Sabores mediterrânicos e caseiros",
-        "pt": "Fim de semana a chegar e o pequeno-almoço já está tratado. Menus completos preparados de fresco todas as manhãs com ingredientes selecionados e entrega pontual no centro histórico de Lisboa. Reserve hoje em breakfastinbedlx.com 🍊🥖",
-        "en": "Weekend is here and breakfast is sorted. Freshly prepared menus every morning with selected local ingredients and punctual delivery across historic Lisbon. Book today at breakfastinbedlx.com 🍊🥖",
-        "hashtags": "#LisbonFoodie #MorningInLisbon #BreakfastDelivery #BreakfastInBedLX #LisbonTrip",
+        "tema": "Escala de reservas e conveniência (Foco Direto)",
+        "pt": (
+            "Menos correria de manhã, mais sabor à mesa. Se estás hospedado em Lisboa ou geres alojamentos na cidade, "
+            "pede o teu pequeno-almoço em breakfastinbedlx.com e garante manhãs mais práticas para quem chega."
+        ),
+        "en": (
+            "Less morning rush, more flavor on the table. Whether you are staying in Lisbon or managing local stays, "
+            "order at breakfastinbedlx.com and make mornings smoother for every guest."
+        ),
+        "tags": "#BreakfastInBedLX #LisbonFood #Lisboa #MorningInLisbon #TravelLisbon #RoomServiceLX",
     },
 ]
 
-def main():
-    hoje = datetime.date.today().isoformat()
-    selecionados = random.sample(TEMAS, k=len(TEMAS))
+escolhido = angulos[ciclo % len(angulos)]
 
-    linhas = [
-        "# Plano Semanal de Redes Sociais — Breakfast in Bed LX\n",
-        f"*Gerado automaticamente em {hoje}*\n\n---\n",
-    ]
+conteudo = f"""# Breakfast in Bed LX — Plano & Posts (Ciclo #{ciclo})
 
-    for item in selecionados:
-        linhas.append(f"## {item['dia']} — {item['titulo']}\n\n")
-        linhas.append(f"**Português:**\n{item['pt']}\n\n")
-        linhas.append(f"**English:**\n{item['en']}\n\n")
-        linhas.append(f"**Hashtags:**\n`{item['hashtags']}`\n\n---\n")
+- **Atualizado (UTC):** {now.strftime("%Y-%m-%d %H:%M")}
+- **Meta operacional:** Mínimo de **20 reservas/dia**
+- **Site oficial:** https://breakfastinbedlx.com
+- **Ângulo ativo:** {escolhido["tema"]}
 
-    with open("posts_semana.md", "w", encoding="utf-8") as f:
-        f.writelines(linhas)
+---
 
-    print("Ficheiro posts_semana.md gerado com sucesso!")
+## Português (PT)
 
-if __name__ == "__main__":
-    main()
+{escolhido["pt"]}
+
+---
+
+## English (EN)
+
+{escolhido["en"]}
+
+---
+
+## Hashtags
+
+{escolhido["tags"]}
+"""
+
+Path("posts_semana.md").write_text(conteudo, encoding="utf-8")
+print("posts_semana.md gerado com sucesso.")
