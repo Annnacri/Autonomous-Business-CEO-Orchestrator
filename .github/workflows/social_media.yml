@@ -1,8 +1,8 @@
-﻿name: Breakfast in Bed LX - Posts Semanais
+﻿name: Breakfast in Bed LX - Posts 12h/12h
 
 on:
   schedule:
-    - cron: '0 9 * * 1'
+    - cron: '0 */12 * * *'
   workflow_dispatch:
 
 permissions:
@@ -28,5 +28,5 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "Agente Social Media"
           git add posts_semana.md
-          git diff --staged --quiet || git commit -m "chore: atualizar posts semanais"
+          git diff --staged --quiet || git commit -m "chore: atualizar posts 12h/12h"
           git push
