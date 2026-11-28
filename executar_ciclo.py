@@ -8,15 +8,17 @@ from email.message import EmailMessage
 CSV_PATH = "contactos.csv"
 LOG_PATH = "envios_log.csv"
 
-SMTP_SERVER = "smtp.gmail.com"
-SMTP_PORT = 587
-REMETENTE = "info@breakfastinbedlx.com"
-SMTP_USER = os.environ.get("SMTP_USER", "")
-SMTP_PASS = os.environ.get("SMTP_PASS", "")
+SMTP_SERVER = os.environ.get("SMTP_SERVER", "smtp.gmail.com").strip()
+SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
+SMTP_USER = os.environ.get("SMTP_USER", "").strip()
+SMTP_PASS = os.environ.get("SMTP_PASS", "").strip()
+REMETENTE = (os.environ.get("REMETENTE") or SMTP_USER).strip()
+REPLY_TO = (os.environ.get("REPLY_TO") or "anaestevesac@gmail.com").strip()
 LIMITE = int(os.environ.get("LIMITE_ENVIOS", "10"))
 PAUSA = int(os.environ.get("PAUSA_SEGUNDOS", "20"))
 
 CAMPOS_CSV = ["nome", "email", "zona", "estado", "ultima_data"]
+
 
 def carregar_csv(caminho):
     if not os.path.exists(caminho):
@@ -24,11 +26,13 @@ def carregar_csv(caminho):
     with open(caminho, mode="r", encoding="utf-8-sig", newline="") as f:
         return list(csv.DictReader(f))
 
+
 def guardar_csv(caminho, linhas):
     with open(caminho, mode="w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=CAMPOS_CSV, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(linhas)
+
 
 def registar_log(email, status, detalhe):
     existe = os.path.exists(LOG_PATH)
@@ -40,8 +44,9 @@ def registar_log(email, status, detalhe):
             "data": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "email": email,
             "status": status,
-            "detalhe": detalhe
+            "detalhe": detalhe,
         })
+
 
 def montar_email(c):
     nome = (c.get("nome") or "Parceiro").strip()
@@ -50,13 +55,19 @@ def montar_email(c):
     corpo = (
         f"Ola, {nome},\n\n"
         f"Preparamos um cartao com QR Code personalizado para colocarem no vosso alojamento na {zona}: "
-        f"os hospedes pedem pequeno-almoco artesanal pelo telemovel e recebem na porta na manha seguinte, sem trabalho para a equipa.\n\n"
+        f"os hospedes pedem pequeno-almoco artesanal pelo telemovel e recebem na porta na manha seguinte, "
+        f"sem custo, sem comissao e sem trabalho para a equipa.\n\n"
         f"Posso enviar-vos o cartao pronto e o menu? https://breakfastinbedlx.com/\n\n"
         f"Ana Alves\nBreakfast in Bed LX\nbreakfastinbedlx.com"
     )
     return assunto, corpo
 
+
 def main():
+    if not SMTP_USER or not SMTP_PASS or not REMETENTE:
+        print("Erro: SMTP_USER, SMTP_PASS ou REMETENTE nao configurados.")
+        return
+
     contactos = carregar_csv(CSV_PATH)
     pendentes = [c for c in contactos if (c.get("estado") or "").strip().lower() == "por_contactar"]
     if not pendentes:
@@ -72,7 +83,7 @@ def main():
             msg = EmailMessage()
             msg["From"] = REMETENTE
             msg["To"] = c["email"].strip()
-            msg["Reply-To"] = "anaestevesac@gmail.com"
+            msg["Reply-To"] = REPLY_TO
             msg["Subject"] = assunto
             msg.set_content(corpo)
             try:
@@ -90,6 +101,7 @@ def main():
 
     guardar_csv(CSV_PATH, contactos)
     print(f"Concluido. Enviados: {enviados}")
+
 
 if __name__ == "__main__":
     main()
