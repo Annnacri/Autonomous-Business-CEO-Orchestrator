@@ -1,0 +1,32 @@
+﻿name: Breakfast in Bed LX - Posts Semanais
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  gerar-posts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descarregar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Executar Agente de Redes Sociais
+        run: python gerar_posts.py
+
+      - name: Guardar posts_semana.md no repositório
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "Agente Social Media"
+          git add posts_semana.md
+          git diff --staged --quiet || git commit -m "chore: atualizar posts semanais"
+          git push
