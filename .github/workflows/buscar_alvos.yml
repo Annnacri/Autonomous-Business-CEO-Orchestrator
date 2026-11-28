@@ -1,0 +1,36 @@
+﻿name: Buscar Alvos Lisboa
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 9 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  procurar-alvos:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Procurar alojamentos em Lisboa e atualizar contactos.csv
+        run: python buscar_alvos.py
+
+      - name: Guardar alteracoes no GitHub
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add contactos.csv
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: atualizar contactos.csv com novos alvos em Lisboa"
+            git push
+          else
+            echo "Sem novos contactos para adicionar."
+          fi
