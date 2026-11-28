@@ -9,10 +9,10 @@ CSV_PATH = Path("contactos.csv")
 OVERPASS_URL = "https://overpass-api.de/api/interpreter"
 
 QUERY = """
-[out:json][timeout:25];
+[out:json][timeout:35];
 (
-  node["tourism"~"hotel|guest_house|apartment|hostel"](38.705,-9.160,38.735,-9.120);
-  way["tourism"~"hotel|guest_house|apartment|hostel"](38.705,-9.160,38.735,-9.120);
+  node["tourism"~"hotel|guest_house|apartment|hostel|chalet"](38.698,-9.210,38.765,-9.095);
+  way["tourism"~"hotel|guest_house|apartment|hostel|chalet"](38.698,-9.210,38.765,-9.095);
 );
 out center tags;
 """
@@ -54,9 +54,9 @@ def buscar_overpass() -> list[dict]:
     req = urllib.request.Request(
         OVERPASS_URL,
         data=data,
-        headers={"User-Agent": "BreakfastInBedLX-Orchestrator/1.0"},
+        headers={"User-Agent": "BreakfastInBedLX-Orchestrator/1.1"},
     )
-    with urllib.request.urlopen(req, timeout=30) as resp:
+    with urllib.request.urlopen(req, timeout=40) as resp:
         payload = json.loads(resp.read().decode("utf-8"))
 
     encontrados = []
